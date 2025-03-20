@@ -1,0 +1,4 @@
+proxies:
+  - ip: "146.190.17.33"
+    proxy: "tinyproxy"
+    yara_ruleset: "./rules/tinyproxy.yar"

@@ -1,0 +1,4 @@
+proxies:
+  - ip: "147.182.196.179"
+    proxy: "mitmproxy"
+    yara_ruleset: "../ProxyPigeon/yara/rules/mitmproxy.yar"

@@ -1,0 +1,13 @@
+proxies:
+  - ip: "146.190.17.33"
+    proxy: "tinyproxy"
+    yara_ruleset: "./rules/tinyproxy.yar"
+  - ip: "159.65.95.40"
+    proxy: "modlishka"
+    yara_ruleset: "./modlishka.yar"
+  - ip: "159.223.56.15"
+    proxy: "traefik"
+    yara_ruleset: ".traefik.yar"
+  - ip: "147.182.196.179"
+    proxy: "mitmproxy"
+    yara_ruleset: "./mitmproxy.yar"

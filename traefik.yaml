@@ -1,0 +1,4 @@
+proxies:
+  - ip: "159.223.56.15"
+    proxy: "traefik"
+    yara_ruleset: "./rules/traefik.yar"

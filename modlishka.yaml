@@ -1,0 +1,4 @@
+proxies:
+  - ip: "159.65.95.40"
+    proxy: "modlishka"
+    yara_ruleset: "../ProxyPigeon/yara/rules/modlishka.yar"
