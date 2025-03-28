@@ -68,7 +68,7 @@ def scan_sqlite_database(db_path, config_file):
                             fail_not_from_proxy += 1
                             total_not_from_proxy += 1
                             if verbose:
-                                print(f"Failure on id: {id_text}")
+                                print(f"Failure on id: {id_text}: Request was not from proxy")
                         else: 
                             total_from_proxy += 1
                     else:
@@ -78,7 +78,7 @@ def scan_sqlite_database(db_path, config_file):
                             total_from_proxy += 1
 
                             if verbose:
-                                print(f"Failure on id: {id_text}")
+                                print(f"Failure on id: {id_text}: Request was from proxy")
                         else:
                             total_not_from_proxy += 1
                 total += 1
