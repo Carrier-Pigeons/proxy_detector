@@ -54,23 +54,46 @@ def scan_sqlite_database(db_path, config_file):
         for i, rule in enumerate(rules, start=0):
             print(f"Parsing Rulset {proxy[i]}")
             total = 0
+            total_from_proxy = 0
+            total_not_from_proxy = 0
             fail = 0
+            fail_from_proxy = 0
+            fail_not_from_proxy = 0
             for rowid, id_text, headers_text, ip_text in rows:
                 if headers_text:
                     matches = scan_text(rule, headers_text)
                     if matches:
                         if ip_text != ip[i]:
                             fail += 1
+                            fail_not_from_proxy += 1
+                            total_not_from_proxy += 1
                             if verbose:
                                 print(f"Failure on id: {id_text}")
+                        else: 
+                            total_from_proxy += 1
                     else:
                         if ip_text == ip[i]:
                             fail += 1
+                            fail_from_proxy += 1
+                            total_from_proxy += 1
+
                             if verbose:
                                 print(f"Failure on id: {id_text}")
+                        else:
+                            total_not_from_proxy += 1
                 total += 1
             percent = 100 * (total - fail)/total
+            percent_from_proxy = 0
+            if (total_from_proxy != 0):
+                percent_from_proxy = 100 * (total_from_proxy - fail_from_proxy)/total_from_proxy
+            precent_not_from_proxy = 0
+            if (total_not_from_proxy != 0):
+                precent_not_from_proxy = 100 * (total_not_from_proxy - fail_not_from_proxy)/total_not_from_proxy
             print(f"Summary {proxy[i]}: {total - fail}/{total} | {percent:.2f}%" )
+            print(f"Total from proxy: {total_from_proxy} | Total not from proxy: {total_not_from_proxy}")
+            print(f"Summary from proxy: {total_from_proxy - fail_from_proxy}/{total_from_proxy} | {percent_from_proxy:.2f}%" )
+            print(f"Summary not from proxy: {total_not_from_proxy - fail_not_from_proxy}/{total_not_from_proxy} | {precent_not_from_proxy:.2f}%" )
+            print("\n")
 
             
         conn.close()
