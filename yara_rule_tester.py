@@ -4,6 +4,7 @@ import sys
 import yaml
 
 verbose = False
+display = False
 
 def parse_config(config_file):
     with open(config_file, "r") as file:
@@ -69,6 +70,9 @@ def scan_sqlite_database(db_path, config_file):
                             total_not_from_proxy += 1
                             if verbose:
                                 print(f"Failure on id: {id_text}: Request was not from proxy")
+                            if display:
+                                print(f"-------------------------------------")
+                                print(f"Rule triggered on id: {id_text}: Request Headers: {headers_text}")
                         else: 
                             total_from_proxy += 1
                     else:
@@ -79,6 +83,10 @@ def scan_sqlite_database(db_path, config_file):
 
                             if verbose:
                                 print(f"Failure on id: {id_text}: Request was from proxy")
+                            if display:
+                                print(f"-------------------------------------")
+                                print(f"Rule triggered on id: {id_text}: Request Headers: {headers_text}")
+
                         else:
                             total_not_from_proxy += 1
                 total += 1
@@ -107,9 +115,12 @@ if __name__ == "__main__":
     
     sqlite_db_file = sys.argv[1]
     config_file = sys.argv[2]
-    if len(sys.argv) == 4 and sys.argv[3] == "verbose":
+    if len(sys.argv) >= 4 and (sys.argv[3] or sys.argv[4])  == "verbose":
         print("setting verbose")
         verbose = True
+    if len(sys.argv) >= 4 and (sys.argv[3] or sys.argv[4]) == "display":
+        print("setting display")
+        display = True
     
     scan_sqlite_database(sqlite_db_file, config_file)
 
