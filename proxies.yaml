@@ -14,7 +14,7 @@ proxies:
       should_be_true:
         - "./rules/connection_keep_alive_removed.yar"
         - "./rules/host_and_ua_reorder.yar"
-        - "./rules/sec_ch_ua_cap.yar"
         - "./rules/dnt_cap.yar"
+        - "./rules/x_added.yar"
       should_be_false:
-        - "./rules/no_false.yar"
+        - "./rules/catch.yar"
