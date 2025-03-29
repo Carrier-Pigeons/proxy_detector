@@ -1,0 +1,20 @@
+proxies:
+  - proxy: "Evilginx"
+    ip: "142.93.155.177"
+    yara_ruleset:
+      should_be_true:
+        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+      should_be_false:
+        - "./rules/dnt_cap.yar"
+  - proxy: "Traefik"
+    ip: "159.223.56.15"  
+    yara_ruleset:
+      should_be_true:
+        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/dnt_cap.yar"
+      should_be_false:
+        - "./rules/no_false.yar"
