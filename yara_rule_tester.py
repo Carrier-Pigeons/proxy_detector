@@ -123,44 +123,31 @@ def scan_sqlite_database(db_path, config_file):
                 if headers_text:
                     matches_true, fails_true = scan_text(rules_true, names_true, headers_text)
                     matches_false, fails_false = scan_text(rules_false, names_false, headers_text)
-                    # proxy_host = f"{proxies[i].lower()}"
                     is_from_proxy = (ip_text == ips[i])
-                    if is_from_proxy:
-                        print(f"ip is {ip_text}, proxy ip is {ips[i]}")
                     if len(matches_true) == len(names_true) and not matches_false:
                         if not is_from_proxy:
                             fail += 1
                             fail_not_from_proxy += 1
                             total_not_from_proxy += 1
-                            # if verbose:
-                                # print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was not from proxy\n{headers_text}\n")
-                            # print_list("FP", id_text, headers_text, proxies[i])
+                            if verbose:
+                                print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was not from proxy\n{headers_text}\n")
+                            print_list("FP", id_text, headers_text, proxies[i])
                         else: 
-                            print(f"Evaluating {proxies[i]} on id: {id_text}")
-                            for failure in fails_true:
-                                print(f"Fail: {failure}")
-                            for matchure in matches_false:
-                                print(f"Match: {matchure}")
                             total_from_proxy += 1
-                            # if verbose:
-                                # print(f"Success on id: {id_text}: Detected as {proxies[i]}\n{headers_text}\n")
-                            # print_list("TP", id_text, headers_text, proxies[i])
+                            if verbose:
+                                print(f"Success on id: {id_text}: Detected as {proxies[i]}\n{headers_text}\n")
+                            print_list("TP", id_text, headers_text, proxies[i])
                     else:
                         if is_from_proxy:
-                            print(f"\nEvaluating {proxies[i]} on id: {id_text}")
-                            for failure in fails_true:
-                                print(f"Fail: {failure}")
-                            for matchure in matches_false:
-                                print(f"Match: {matchure}")
                             fail += 1
                             fail_from_proxy += 1
                             total_from_proxy += 1
-                            # if verbose:
-                                # print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was from proxy\n{headers_text}\n")
-                            # print_list("FN", id_text, headers_text, proxies[i])
+                            if verbose:
+                                print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was from proxy\n{headers_text}\n")
+                            print_list("FN", id_text, headers_text, proxies[i])
                         else:
                             total_not_from_proxy += 1
-                            # print_list("TN", id_text, headers_text, proxies[i])
+                            print_list("TN", id_text, headers_text, proxies[i])
                 total += 1
                 
             if (total_from_proxy == 0):
