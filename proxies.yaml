@@ -76,12 +76,14 @@ proxies:
         - "./rules/dnt_cap.yar"
         - "./rules/host_and_ua_reorder.yar"
         - "./rules/sec_ch_ua_cap.yar"
-        - "./rules/x_added.yar"
+        - "./rules/x_forwarded_for_added.yar"
       should_be_false:
-        - "./rules/connection_close.yar"
-        - "./rules/cookie_removed.yar"
-        - "./rules/priority_added.yar"
-        - "./rules/sec_ch_removed.yar"
+        - "./rules/x_forwarded_host_added.yar"
+        - "./rules/x_forwarded_port_added.yar"
+        - "./rules/x_forwarded_proto_added.yar"
+        - "./rules/x_forwarded_server_added.yar"
+        - "./rules/via_added.yar"
+
 
   - proxy: "TinyProxy"
     ip: "209.38.52.54"

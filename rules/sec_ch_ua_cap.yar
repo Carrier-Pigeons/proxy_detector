@@ -8,7 +8,7 @@ rule Sec_Ch_Ua_Headers_Capitalization_Change
         $sec_ch_ua_platform_old = "sec-ch-ua-platform" nocase
         $sec_ch_ua_platform_new = "Sec-Ch-Ua-Platform"
     condition:
-        ($sec_ch_ua_old and $sec_ch_ua_new) or
-        ($sec_ch_ua_mobile_old and $sec_ch_ua_mobile_new) or
-        ($sec_ch_ua_platform_old and $sec_ch_ua_platform_new)
+        (not $sec_ch_ua_old or $sec_ch_ua_new) and
+        (not $sec_ch_ua_mobile_old or $sec_ch_ua_mobile_new) and
+        (not $sec_ch_ua_platform_old or $sec_ch_ua_platform_new)
 }
