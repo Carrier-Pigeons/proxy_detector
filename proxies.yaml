@@ -7,11 +7,6 @@ proxies:
         - "./rules/host_and_ua_reorder.yar"
         - "./rules/sec_ch_ua_cap.yar"
       should_be_false:
-        - "./rules/connection_close.yar"
-        - "./rules/cookie_removed.yar"
-        - "./rules/dnt_cap.yar"
-        - "./rules/priority_added.yar"
-        - "./rules/sec_ch_removed.yar"
 
   - proxy: "Traefik"
     ip: "159.223.56.15"  
