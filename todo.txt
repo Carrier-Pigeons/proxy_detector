@@ -14,7 +14,8 @@ Traefik : 159.223.56.15
 MITMProxy : 147.182.196.179
 Squid : 178.128.225.42
 HAProxy : 170.64.227.20
-Modlishka : ?
+Modlishka : 159.65.95.40
+TinyProxy : 209.38.52.54
 
 Precision "Of all the items labeled as positive, how many were actually positive?"
 Recall "Of all the actual positives, how many did we correctly identify?"
