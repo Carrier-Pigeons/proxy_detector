@@ -1,7 +1,7 @@
 rule Priority_Added
 {
     strings:
-        $x_header = "Priority:" nocase
+        $priority = "priority:" nocase
     condition:
-        $x_header
+        $priority
 }

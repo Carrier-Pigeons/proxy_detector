@@ -47,8 +47,8 @@ proxies:
     ip: "178.128.225.42"  
     yara_ruleset:
       should_be_true:
-        - "./rules/connection_close.yar"
-        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/surrogate_capability_added.yar"
+        - "./rules/via_added.yar"
         - "./rules/x_added.yar"
       should_be_false:
         - "./rules/cookie_removed.yar"
@@ -61,15 +61,12 @@ proxies:
     yara_ruleset:
       should_be_true:
         - "./rules/priority_added.yar"
-        - "./rules/x_added.yar"
-        - "./rules/connection_close.yar"
       should_be_false:
-        - "./rules/connection_keep_alive_removed.yar"
         - "./rules/cookie_removed.yar"
-        - "./rules/dnt_cap.yar"
         - "./rules/host_and_ua_reorder.yar"
         - "./rules/sec_ch_removed.yar"
         - "./rules/sec_ch_ua_cap.yar"
+
 
   - proxy: "Modlishka"
     ip: "68.183.61.129"  

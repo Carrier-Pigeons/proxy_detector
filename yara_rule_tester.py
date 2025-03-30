@@ -130,6 +130,9 @@ def scan_sqlite_database(db_path, config_file):
                             total_not_from_proxy += 1
                             print_list("TN", id_text, headers_text, proxies[i])
                 total += 1
+                
+            if (total_from_proxy == 0):
+                total_from_proxy = -.01 # Handle division by 0
             
             TP = total_from_proxy - fail_from_proxy
             FP = fail_not_from_proxy
@@ -141,7 +144,7 @@ def scan_sqlite_database(db_path, config_file):
             overall_fp += FP
             overall_tn += TN
             overall_fn += FN
-                        
+                                    
             precision, recall, f1_score = calculate_metrics(TP, FP, TN, FN)
             
             print("")
@@ -149,10 +152,10 @@ def scan_sqlite_database(db_path, config_file):
             print(f"Total Requests from {proxies[i]}: {total_from_proxy}")
             print("")
             print("Confusion Matrix:")
-            print(f"True Positive (TP): {TP} | {100 * TP/total:.2f}%")
-            print(f"False Positive (FP): {FP} | {100 * FP/total:.2f}%")
-            print(f"True Negative (TN): {TN} | {100 * TN/total:.2f}%")
-            print(f"False Negative (FN): {FN} | {100 * FN/total:.2f}%")
+            print(f"True Positive (TP): {TP} | {100 * TP/total:.2f}% of total | {100 * TP/total_from_proxy:.2f}% of true value")
+            print(f"False Positive (FP): {FP} | {100 * FP/total:.2f}% of total")
+            print(f"True Negative (TN): {TN} | {100 * TN/total:.2f}% of total | {100 * TN/(total-total_from_proxy):.2f}% of true value")
+            print(f"False Negative (FN): {FN} | {100 * FN/total:.2f}% of total")
             print("")
             print(f"Precision: {precision:.2f}")
             print(f"Recall: {recall:.2f}")
@@ -166,10 +169,10 @@ def scan_sqlite_database(db_path, config_file):
             print(f"Total Requests Parsed: {overall_total}")
             print("")
             print("Confusion Matrix:")
-            print(f"True Positive (TP): {overall_tp} | {100 * overall_tp/overall_total:.2f}%")
-            print(f"False Positive (FP): {overall_fp} | {100 * overall_fp/overall_total:.2f}%")
-            print(f"True Negative (TN): {overall_tn} | {100 * overall_tn/overall_total:.2f}%")
-            print(f"False Negative (FN): {overall_fn} | {100 * overall_fn/overall_total:.2f}%")
+            print(f"True Positive (TP): {TP} | {100 * TP/total:.2f}% of total | {100 * TP/total_from_proxy:.2f}% of true value")
+            print(f"False Positive (FP): {FP} | {100 * FP/total:.2f}% of total | {100 * FP/total_from_proxy:.2f}% of true value")
+            print(f"True Negative (TN): {TN} | {100 * TN/total:.2f}% of total | {100 * TN/(total-total_from_proxy):.2f}% of true value")
+            print(f"False Negative (FN): {FN} | {100 * FN/total:.2f}% of total | {100 * FN/(total-total_from_proxy):.2f}% of true value")
             print("")
             print(f"Precision: {precision:.2f}")
             print(f"Recall: {recall:.2f}")

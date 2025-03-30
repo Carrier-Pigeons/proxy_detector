@@ -1,7 +1,7 @@
 rule Cookie_Removed
 {
     strings:
-        $cookie = "Cookie:"
+        $cookie = "Cookie:" nocase
     condition:
         not $cookie
 }

@@ -1,4 +1,6 @@
 TODO:
+python3 yara_rule_tester.py data.db proxies.yaml flag=fn proxy=squid
+I'm basically going through looking at the flag=fn (false negatives) and trying to figure out why the rule didnt trigger for these, or vice versa for false positives
 I've only done chrome, since we got barely any firefox or safari requests as it is
 How can we test for referer to be different than source?
 ConnectionKeepAlive marks everything as positive
@@ -14,17 +16,17 @@ Squid : 178.128.225.42
 HAProxy : 170.64.227.20
 Modlishka : ?
 
-Precision is how many of the predicted positives are actually correct
-Recall is how many positives were marked out of the total number of positives (TP/TotalPositive). A value close to 1 is 100%
-F1 Score provides a balance of both precision and recall
+Precision "Of all the items labeled as positive, how many were actually positive?"
+Recall "Of all the actual positives, how many did we correctly identify?"
+F1 Score provides a balance of both precision and recall: F1 Score = 2 * (Precision * Recall) / (Precision + Recall) 
 
 Best results so far:
 Evilginx
     Confusion Matrix:
-    True Positive (TP): 291 | 8.23%
-    False Positive (FP): 395 | 11.18%
-    True Negative (TN): 2599 | 73.54%
-    False Negative (FN): 249 | 7.05%
+    True Positive (TP): 291 | 8.23% of total | 53.89% of true value
+    False Positive (FP): 398 | 11.26% of total | 73.70% of true value
+    True Negative (TN): 2596 | 73.46% of total | 86.71% of true value
+    False Negative (FN): 249 | 7.05% of total | 8.32% of true value
 
     Precision: 0.42
     Recall: 0.54
@@ -32,19 +34,16 @@ Evilginx
 
 Traefik
     Confusion Matrix:
-    True Positive (TP): 223 | 6.31%
-    False Positive (FP): 1731 | 48.98%
-    True Negative (TN): 1479 | 41.85%
-    False Negative (FN): 101 | 2.86%
+    True Positive (TP): 223 | 6.31% of total | 68.83% of true value
+    False Positive (FP): 1731 | 48.98% of total | 534.26% of true value
+    True Negative (TN): 1479 | 41.85% of total | 46.07% of true value
+    False Negative (FN): 101 | 2.86% of total | 3.15% of true value
 
     Precision: 0.11
     Recall: 0.69
     F1 Score: 0.20
 
 MITMProxy
-    Total Requests Parsed for MITMProxy: 3534
-    Total Requests` from MITMProxy: 343
-
     Confusion Matrix:
     True Positive (TP): 0 | 0.00%
     False Positive (FP): 72 | 2.04%
@@ -56,9 +55,6 @@ MITMProxy
     F1 Score: 0.00
 
 HAProxy
-    Total Requests Parsed for HAProxy: 3534
-    Total Requests from HAProxy: 377
-
     Confusion Matrix:
     True Positive (TP): 258 | 7.30%
     False Positive (FP): 1402 | 39.67%
@@ -70,15 +66,12 @@ HAProxy
     F1 Score: 0.25
 
 Squid
-    Total Requests Parsed for Squid: 3534
-    Total Requests from Squid: 327
-
     Confusion Matrix:
-    True Positive (TP): 184 | 5.21%
-    False Positive (FP): 216 | 6.11%
-    True Negative (TN): 2991 | 84.63%
-    False Negative (FN): 143 | 4.05%
+    True Positive (TP): 184 | 5.21% of total | 56.27% of true value
+    False Positive (FP): 121 | 3.42% of total
+    True Negative (TN): 3086 | 87.32% of total | 96.23% of true value
+    False Negative (FN): 143 | 4.05% of total
 
-    Precision: 0.46
+    Precision: 0.60
     Recall: 0.56
-    F1 Score: 0.51
+    F1 Score: 0.58
