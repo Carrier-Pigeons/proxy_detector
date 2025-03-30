@@ -69,7 +69,7 @@ proxies:
 
 
   - proxy: "Modlishka"
-    ip: "68.183.61.129"  
+    ip: "159.65.95.40"  
     yara_ruleset:
       should_be_true:
         - "./rules/connection_keep_alive_removed.yar"
@@ -82,3 +82,12 @@ proxies:
         - "./rules/cookie_removed.yar"
         - "./rules/priority_added.yar"
         - "./rules/sec_ch_removed.yar"
+
+  - proxy: "TinyProxy"
+    ip: "209.38.52.54"
+    yara_ruleset:
+      should_be_true:
+        - "./rules/sec_ch_removed.yar"
+        - "./rules/x_added.yar"
+      should_be_false:
+

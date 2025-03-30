@@ -2,6 +2,7 @@ import yara
 import sqlite3
 import sys
 import yaml
+import re
 
 verbose = False
 list_flag = None
@@ -23,25 +24,44 @@ def parse_config(config_file):
 def load_yara_rules(yara_rules_paths):
     """Compiles YARA rules from a list of files."""
     rules = []
-    for yara_rule_path in yara_rules_paths:
-        print(f"Loading YARA rule from: {yara_rule_path}")
-        try:
-            rule = yara.compile(filepath=yara_rule_path)
-            rules.append(rule)
-        except yara.SyntaxError as e:
-            print(f"YARA syntax error: {e}")
-            sys.exit(1)
-        except yara.Error as e:
-            print(f"YARA error: {e}")
-            sys.exit(1)
-    return rules
+    rule_names = []
+    if yara_rules_paths != None:
+        for yara_rule_path in yara_rules_paths:
+            print(f"Loading YARA rule from: {yara_rule_path}")
+            try:
+                rule = yara.compile(filepath=yara_rule_path)
+                rules.append(rule)
+                with open(yara_rule_path, "r") as file:
+                    rule_text = file.read()
+                    rule_names.append(re.findall(r"rule\s+(\w+)", rule_text))
+            except yara.SyntaxError as e:
+                print(f"YARA syntax error: {e}")
+                sys.exit(1)
+            except yara.Error as e:
+                print(f"YARA error: {e}")
+                sys.exit(1)
+    return rules, rule_names
 
-def scan_text(rules, text):
+def scan_text(rules, names, text):
     """Scans the given text using YARA rules."""
     matches = []
+    fails = []
     for rule in rules:
-        matches.extend(rule.match(data=text))
-    return matches
+
+        curr_match = rule.match(data=text)
+        # for match in curr_match:
+        #     print(f"Rule: {match.rule}")
+        #     for string_match in match.strings:  # Iterate over the list of matches
+        #         print(string_match)
+        #         for instance in string_match.instances:
+        #             print(f"Match: {instance.offset}")
+
+        if len(curr_match) != 0:
+            matches.append([str(match) for match in curr_match])
+    for name in names:
+        if name not in matches:
+            fails.append(name)
+    return matches, fails 
 
 def print_list(flag, id_text, headers_text, proxy_detected):
     if list_flag == flag:
@@ -91,8 +111,8 @@ def scan_sqlite_database(db_path, config_file):
                 continue
 
             print(f"\n========== Parsing Ruleset {proxies[i]} ==========\n")
-            rules_true = load_yara_rules(ruleset_paths['should_be_true'])
-            rules_false = load_yara_rules(ruleset_paths.get('should_be_false', []))
+            rules_true, names_true = load_yara_rules(ruleset_paths['should_be_true'])
+            rules_false, names_false = load_yara_rules(ruleset_paths.get('should_be_false', []))
             total = 0
             total_from_proxy = 0
             total_not_from_proxy = 0
@@ -101,34 +121,46 @@ def scan_sqlite_database(db_path, config_file):
             fail_not_from_proxy = 0
             for rowid, id_text, headers_text, ip_text in rows:
                 if headers_text:
-                    matches_true = scan_text(rules_true, headers_text)
-                    matches_false = scan_text(rules_false, headers_text)
-                    proxy_host = f"{proxies[i].lower()}"
-                    is_from_proxy = proxy_host in headers_text.lower() or ip_text == ips[i]
-                    if matches_true and not matches_false:
+                    matches_true, fails_true = scan_text(rules_true, names_true, headers_text)
+                    matches_false, fails_false = scan_text(rules_false, names_false, headers_text)
+                    # proxy_host = f"{proxies[i].lower()}"
+                    is_from_proxy = (ip_text == ips[i])
+                    if is_from_proxy:
+                        print(f"ip is {ip_text}, proxy ip is {ips[i]}")
+                    if len(matches_true) == len(names_true) and not matches_false:
                         if not is_from_proxy:
                             fail += 1
                             fail_not_from_proxy += 1
                             total_not_from_proxy += 1
-                            if verbose:
-                                print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was not from proxy\n{headers_text}\n")
-                            print_list("FP", id_text, headers_text, proxies[i])
+                            # if verbose:
+                                # print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was not from proxy\n{headers_text}\n")
+                            # print_list("FP", id_text, headers_text, proxies[i])
                         else: 
+                            print(f"Evaluating {proxies[i]} on id: {id_text}")
+                            for failure in fails_true:
+                                print(f"Fail: {failure}")
+                            for matchure in matches_false:
+                                print(f"Match: {matchure}")
                             total_from_proxy += 1
-                            if verbose:
-                                print(f"Success on id: {id_text}: Detected as {proxies[i]}\n{headers_text}\n")
-                            print_list("TP", id_text, headers_text, proxies[i])
+                            # if verbose:
+                                # print(f"Success on id: {id_text}: Detected as {proxies[i]}\n{headers_text}\n")
+                            # print_list("TP", id_text, headers_text, proxies[i])
                     else:
                         if is_from_proxy:
+                            print(f"\nEvaluating {proxies[i]} on id: {id_text}")
+                            for failure in fails_true:
+                                print(f"Fail: {failure}")
+                            for matchure in matches_false:
+                                print(f"Match: {matchure}")
                             fail += 1
                             fail_from_proxy += 1
                             total_from_proxy += 1
-                            if verbose:
-                                print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was from proxy\n{headers_text}\n")
-                            print_list("FN", id_text, headers_text, proxies[i])
+                            # if verbose:
+                                # print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was from proxy\n{headers_text}\n")
+                            # print_list("FN", id_text, headers_text, proxies[i])
                         else:
                             total_not_from_proxy += 1
-                            print_list("TN", id_text, headers_text, proxies[i])
+                            # print_list("TN", id_text, headers_text, proxies[i])
                 total += 1
                 
             if (total_from_proxy == 0):
