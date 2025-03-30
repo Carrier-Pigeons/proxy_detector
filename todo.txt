@@ -1,0 +1,84 @@
+TODO:
+I've only done chrome, since we got barely any firefox or safari requests as it is
+How can we test for referer to be different than source?
+ConnectionKeepAlive marks everything as positive
+Currently reading every X- header as one and the same
+Can't figure out how to test modlishka, each IP is different
+MITMProxy has two real differences, both in ordering (Sec_Ch_Ua_Headers_Order
+    and Pragma_Cache_Control_Order) which I havent figured out yet
+
+Evilginx : 142.93.155.177
+Traefik : 159.223.56.15
+MITMProxy : 147.182.196.179
+Squid : 178.128.225.42
+HAProxy : 170.64.227.20
+Modlishka : ?
+
+Precision is how many of the predicted positives are actually correct
+Recall is how many positives were marked out of the total number of positives (TP/TotalPositive). A value close to 1 is 100%
+F1 Score provides a balance of both precision and recall
+
+Best results so far:
+Evilginx
+    Confusion Matrix:
+    True Positive (TP): 291 | 8.23%
+    False Positive (FP): 395 | 11.18%
+    True Negative (TN): 2599 | 73.54%
+    False Negative (FN): 249 | 7.05%
+
+    Precision: 0.42
+    Recall: 0.54
+    F1 Score: 0.47
+
+Traefik
+    Confusion Matrix:
+    True Positive (TP): 223 | 6.31%
+    False Positive (FP): 1731 | 48.98%
+    True Negative (TN): 1479 | 41.85%
+    False Negative (FN): 101 | 2.86%
+
+    Precision: 0.11
+    Recall: 0.69
+    F1 Score: 0.20
+
+MITMProxy
+    Total Requests Parsed for MITMProxy: 3534
+    Total Requests` from MITMProxy: 343
+
+    Confusion Matrix:
+    True Positive (TP): 0 | 0.00%
+    False Positive (FP): 72 | 2.04%
+    True Negative (TN): 3119 | 88.26%
+    False Negative (FN): 343 | 9.71%
+
+    Precision: 0.00
+    Recall: 0.00
+    F1 Score: 0.00
+
+HAProxy
+    Total Requests Parsed for HAProxy: 3534
+    Total Requests from HAProxy: 377
+
+    Confusion Matrix:
+    True Positive (TP): 258 | 7.30%
+    False Positive (FP): 1402 | 39.67%
+    True Negative (TN): 1755 | 49.66%
+    False Negative (FN): 119 | 3.37%
+
+    Precision: 0.16
+    Recall: 0.68
+    F1 Score: 0.25
+
+Squid
+    Total Requests Parsed for Squid: 3534
+    Total Requests from Squid: 327
+
+    Confusion Matrix:
+    True Positive (TP): 184 | 5.21%
+    False Positive (FP): 216 | 6.11%
+    True Negative (TN): 2991 | 84.63%
+    False Negative (FN): 143 | 4.05%
+
+    Precision: 0.46
+    Recall: 0.56
+    F1 Score: 0.51

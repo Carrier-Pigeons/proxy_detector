@@ -71,7 +71,7 @@ def scan_sqlite_database(db_path, config_file):
     id_column_name = "id"
     ip_column_name = "ip"
     headers_column_name = "headers"
-    ips, proxies, yara_rules_paths = parse_config(config_file)
+    ips, proxies, rulesets = parse_config(config_file)
 
     overall_total = 0
     overall_tp = 0
@@ -86,7 +86,7 @@ def scan_sqlite_database(db_path, config_file):
         cursor.execute(f"SELECT rowid, {id_column_name}, {headers_column_name}, {ip_column_name} FROM {table_name}")
         rows = cursor.fetchall()
 
-        for i, ruleset_paths in enumerate(yara_rules_paths, start=0):
+        for i, ruleset_paths in enumerate(rulesets, start=0):
             if specific_proxy and proxies[i].lower() != specific_proxy.lower():
                 continue
 
@@ -103,8 +103,10 @@ def scan_sqlite_database(db_path, config_file):
                 if headers_text:
                     matches_true = scan_text(rules_true, headers_text)
                     matches_false = scan_text(rules_false, headers_text)
+                    proxy_host = f"{proxies[i].lower()}"
+                    is_from_proxy = proxy_host in headers_text.lower() or ip_text == ips[i]
                     if matches_true and not matches_false:
-                        if ip_text != ips[i]:
+                        if not is_from_proxy:
                             fail += 1
                             fail_not_from_proxy += 1
                             total_not_from_proxy += 1
@@ -117,11 +119,10 @@ def scan_sqlite_database(db_path, config_file):
                                 print(f"Success on id: {id_text}: Detected as {proxies[i]}\n{headers_text}\n")
                             print_list("TP", id_text, headers_text, proxies[i])
                     else:
-                        if ip_text == ips[i]:
+                        if is_from_proxy:
                             fail += 1
                             fail_from_proxy += 1
                             total_from_proxy += 1
-
                             if verbose:
                                 print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was from proxy\n{headers_text}\n")
                             print_list("FN", id_text, headers_text, proxies[i])
@@ -140,34 +141,40 @@ def scan_sqlite_database(db_path, config_file):
             overall_fp += FP
             overall_tn += TN
             overall_fn += FN
-            
+                        
             precision, recall, f1_score = calculate_metrics(TP, FP, TN, FN)
-            print(f"Total Requests Parsed for {proxies[i]}: {total}\n")
+            
+            print("")
+            print(f"Total Requests Parsed for {proxies[i]}: {total}")
+            print(f"Total Requests from {proxies[i]}: {total_from_proxy}")
+            print("")
             print("Confusion Matrix:")
             print(f"True Positive (TP): {TP} | {100 * TP/total:.2f}%")
             print(f"False Positive (FP): {FP} | {100 * FP/total:.2f}%")
             print(f"True Negative (TN): {TN} | {100 * TN/total:.2f}%")
             print(f"False Negative (FN): {FN} | {100 * FN/total:.2f}%")
-            print("\n")
+            print("")
             print(f"Precision: {precision:.2f}")
             print(f"Recall: {recall:.2f}")
             print(f"F1 Score: {f1_score:.2f}")
-            print("\n")
+            print("")
         
         if not specific_proxy:
             precision, recall, f1_score = calculate_metrics(overall_tp, overall_fp, overall_tn, overall_fn)
-            print(f"\n========== Overall Statistics ==========\n")
-            print(f"Total Requests Parsed: {overall_total}\n")
+            print(f"\n========== Overall Statistics ==========")
+            print("")
+            print(f"Total Requests Parsed: {overall_total}")
+            print("")
             print("Confusion Matrix:")
             print(f"True Positive (TP): {overall_tp} | {100 * overall_tp/overall_total:.2f}%")
             print(f"False Positive (FP): {overall_fp} | {100 * overall_fp/overall_total:.2f}%")
             print(f"True Negative (TN): {overall_tn} | {100 * overall_tn/overall_total:.2f}%")
             print(f"False Negative (FN): {overall_fn} | {100 * overall_fn/overall_total:.2f}%")
-            print("\n")
+            print("")
             print(f"Precision: {precision:.2f}")
             print(f"Recall: {recall:.2f}")
             print(f"F1 Score: {f1_score:.2f}")
-            print("\n")
+            print("")
             
         conn.close()
     except sqlite3.Error as e:

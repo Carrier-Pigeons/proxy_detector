@@ -7,14 +7,81 @@ proxies:
         - "./rules/host_and_ua_reorder.yar"
         - "./rules/sec_ch_ua_cap.yar"
       should_be_false:
+        - "./rules/connection_close.yar"
+        - "./rules/cookie_removed.yar"
         - "./rules/dnt_cap.yar"
+        - "./rules/priority_added.yar"
+        - "./rules/sec_ch_removed.yar"
+
   - proxy: "Traefik"
     ip: "159.223.56.15"  
     yara_ruleset:
       should_be_true:
         - "./rules/connection_keep_alive_removed.yar"
-        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/cookie_removed.yar"
         - "./rules/dnt_cap.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/priority_added.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+      should_be_false:
+        - "./rules/connection_close.yar"
+        - "./rules/sec_ch_removed.yar"
+
+  - proxy: "MITMProxy"
+    ip: "147.182.196.179"  
+    yara_ruleset:
+      should_be_true:
+        - "./rules/catch.yar"
+      should_be_false:
+        - "./rules/connection_close.yar"
+        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/cookie_removed.yar"
+        - "./rules/dnt_cap.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/priority_added.yar"
+        - "./rules/sec_ch_removed.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/x_added.yar"
+
+  - proxy: "Squid"
+    ip: "178.128.225.42"  
+    yara_ruleset:
+      should_be_true:
+        - "./rules/connection_close.yar"
+        - "./rules/connection_keep_alive_removed.yar"
         - "./rules/x_added.yar"
       should_be_false:
-        - "./rules/catch.yar"
+        - "./rules/cookie_removed.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/sec_ch_removed.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+
+  - proxy: "HAProxy"
+    ip: "170.64.227.20"  
+    yara_ruleset:
+      should_be_true:
+        - "./rules/priority_added.yar"
+        - "./rules/x_added.yar"
+        - "./rules/connection_close.yar"
+      should_be_false:
+        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/cookie_removed.yar"
+        - "./rules/dnt_cap.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/sec_ch_removed.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+
+  - proxy: "Modlishka"
+    ip: "68.183.61.129"  
+    yara_ruleset:
+      should_be_true:
+        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/dnt_cap.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/x_added.yar"
+      should_be_false:
+        - "./rules/connection_close.yar"
+        - "./rules/cookie_removed.yar"
+        - "./rules/priority_added.yar"
+        - "./rules/sec_ch_removed.yar"
