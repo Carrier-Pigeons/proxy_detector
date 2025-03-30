@@ -1,7 +1,8 @@
 rule Connection_Close
 {
     strings:
-        $connection_close = "Connection:close" nocase
+        $connection_header = "Connection:" nocase
+        $connection_close = "close"
     condition:
-        $connection_close
+        not $connection_header or $connection_close at (@connection_header + 11)
 }

@@ -126,6 +126,11 @@ def scan_sqlite_database(db_path, config_file):
                     is_from_proxy = (ip_text == ips[i])
                     if len(matches_true) == len(names_true) and not matches_false:
                         if not is_from_proxy:
+                            print(f"Detecting on id {id_text}")
+                            for matchure in matches_true:
+                                print(f"Match: {matchure}")
+                            for failure in fails_false:
+                                print(f"Failure: {failure}")
                             fail += 1
                             fail_not_from_proxy += 1
                             total_not_from_proxy += 1
