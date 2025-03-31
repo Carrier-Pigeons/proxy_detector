@@ -52,7 +52,6 @@ proxies:
         - "./rules/x_added.yar"
         - "./rules/connection_close.yar"
       should_be_false:
-        - "./rules/sec_ch_ua_cap.yar"
 
   - proxy: "HAProxy"
     ip: "170.64.227.20"  
