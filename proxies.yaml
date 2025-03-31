@@ -18,9 +18,13 @@ proxies:
     yara_ruleset:
       should_be_true:
         - "./rules/connection_removed.yar"
-        - "./rules/dnt_removed.yar"
-        - "./rules/priority_added.yar"
+        - "./rules/dnt_cap.yar"
         - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/x_forwarded_for_added.yar"
+        - "./rules/x_forwarded_host_added.yar"
+        - "./rules/x_forwarded_port_added.yar"
+        - "./rules/x_forwarded_proto_added.yar"
+        - "./rules/x_forwarded_server_added.yar"
       should_be_false:
 
   - proxy: "MITMProxy"
