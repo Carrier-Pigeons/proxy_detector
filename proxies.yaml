@@ -57,12 +57,8 @@ proxies:
     ip: "170.64.227.20"  
     yara_ruleset:
       should_be_true:
-        - "./rules/priority_added.yar"
+        - "./rules/all_headers_lowercase.yar"
       should_be_false:
-        - "./rules/cookie_removed.yar"
-        - "./rules/host_and_ua_reorder.yar"
-        - "./rules/sec_ch_removed.yar"
-        - "./rules/sec_ch_ua_cap.yar"
 
 
   - proxy: "Modlishka"
