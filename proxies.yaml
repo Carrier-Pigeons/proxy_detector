@@ -84,5 +84,10 @@ proxies:
       should_be_true:
         - "./rules/sec_ch_removed.yar"
         - "./rules/x_added.yar"
+        - "./rules/connection_close_required.yar"
+        - "./rules/connection_second.yar"
+        # - "./rules/x_tiny_added.yar"
+        - "./rules/sec-ch-move.yar"
+        - "./rules/zstd_encoding_removed.yar"
       should_be_false:
 
