@@ -9,6 +9,7 @@ proxies:
         - "./rules/host_first_ua_second.yar"
         - "./rules/dnt_cap.yar"
         - "./rules/sec-ch-move.yar"
+        - "./rules/accept_encoding_last.yar"
 
       should_be_false:
 
