@@ -6,8 +6,9 @@ proxies:
         - "./rules/connection_removed.yar"
         - "./rules/sec_ch_ua_cap.yar"
         - "./rules/accept_encoding_gzip.yar"
-        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/host_first_ua_second.yar"
         - "./rules/dnt_cap.yar"
+        - "./rules/sec-ch-move.yar"
 
       should_be_false:
 
