@@ -3,24 +3,23 @@ proxies:
     ip: "142.93.155.177"
     yara_ruleset:
       should_be_true:
-        - "./rules/connection_keep_alive_removed.yar"
-        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/connection_removed.yar"
         - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/accept_encoding_gzip.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/dnt_cap.yar"
+
       should_be_false:
 
   - proxy: "Traefik"
     ip: "159.223.56.15"  
     yara_ruleset:
       should_be_true:
-        - "./rules/connection_keep_alive_removed.yar"
-        - "./rules/cookie_removed.yar"
-        - "./rules/dnt_cap.yar"
-        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/connection_removed.yar"
+        - "./rules/dnt_removed.yar"
         - "./rules/priority_added.yar"
         - "./rules/sec_ch_ua_cap.yar"
       should_be_false:
-        - "./rules/connection_close.yar"
-        - "./rules/sec_ch_removed.yar"
 
   - proxy: "MITMProxy"
     ip: "147.182.196.179"  
@@ -29,7 +28,7 @@ proxies:
         - "./rules/catch.yar"
       should_be_false:
         - "./rules/connection_close.yar"
-        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/connection_removed.yar"
         - "./rules/cookie_removed.yar"
         - "./rules/dnt_cap.yar"
         - "./rules/host_and_ua_reorder.yar"
@@ -45,10 +44,8 @@ proxies:
         - "./rules/surrogate_capability_added.yar"
         - "./rules/via_added.yar"
         - "./rules/x_added.yar"
+        - "./rules/connection_close.yar"
       should_be_false:
-        - "./rules/cookie_removed.yar"
-        - "./rules/host_and_ua_reorder.yar"
-        - "./rules/sec_ch_removed.yar"
         - "./rules/sec_ch_ua_cap.yar"
 
   - proxy: "HAProxy"
@@ -67,7 +64,7 @@ proxies:
     ip: "159.65.95.40"  
     yara_ruleset:
       should_be_true:
-        - "./rules/connection_keep_alive_removed.yar"
+        - "./rules/connection_removed.yar"
         - "./rules/dnt_cap.yar"
         - "./rules/host_and_ua_reorder.yar"
         - "./rules/sec_ch_ua_cap.yar"

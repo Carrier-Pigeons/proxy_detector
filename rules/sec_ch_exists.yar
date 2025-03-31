@@ -5,7 +5,7 @@ rule Sec_Ch_Removed
         $sec_ch_normal = "Sec-Ch-"
         $sec_ch_cap = "SEC-CH-"
     condition:
-        not $sec_ch and
-        not $sec_ch_normal and
-        not $sec_ch_cap
+        $sec_ch or
+        $sec_ch_normal or
+        $sec_ch_cap
 }

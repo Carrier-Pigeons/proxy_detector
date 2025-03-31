@@ -5,7 +5,6 @@ I've only done chrome, since we got barely any firefox or safari requests as it 
 How can we test for referer to be different than source?
 ConnectionKeepAlive marks everything as positive
 Currently reading every X- header as one and the same
-Can't figure out how to test modlishka, each IP is different
 MITMProxy has two real differences, both in ordering (Sec_Ch_Ua_Headers_Order
     and Pragma_Cache_Control_Order) which I havent figured out yet
 
@@ -57,22 +56,55 @@ MITMProxy
 
 HAProxy
     Confusion Matrix:
-    True Positive (TP): 258 | 7.30%
-    False Positive (FP): 1402 | 39.67%
-    True Negative (TN): 1755 | 49.66%
-    False Negative (FN): 119 | 3.37%
+    True Positive (TP): 225 | 6.37% of total | 59.68% of true value
+    False Positive (FP): 0 | 0.00% of total
+    True Negative (TN): 3157 | 89.33% of total | 100.00% of true value
+    False Negative (FN): 152 | 4.30% of total
 
-    Precision: 0.16
-    Recall: 0.68
-    F1 Score: 0.25
+    Precision: 1.00
+    Recall: 0.60
+    F1 Score: 0.75
 
 Squid
     Confusion Matrix:
-    True Positive (TP): 184 | 5.21% of total | 56.27% of true value
-    False Positive (FP): 121 | 3.42% of total
-    True Negative (TN): 3086 | 87.32% of total | 96.23% of true value
-    False Negative (FN): 143 | 4.05% of total
+    True Positive (TP): 230 | 6.51% of total | 70.34% of true value
+    False Positive (FP): 0 | 0.00% of total
+    True Negative (TN): 3207 | 90.75% of total | 100.00% of true value
+    False Negative (FN): 97 | 2.74% of total
 
-    Precision: 0.60
-    Recall: 0.56
-    F1 Score: 0.58
+    Precision: 1.00
+    Recall: 0.70
+    F1 Score: 0.83
+
+Modlishka
+    Confusion Matrix:
+    True Positive (TP): 114 | 3.23% of total | 30.89% of true value
+    False Positive (FP): 0 | 0.00% of total
+    True Negative (TN): 3165 | 89.56% of total | 100.00% of true value
+    False Negative (FN): 255 | 7.22% of total
+
+    Precision: 1.00
+    Recall: 0.31
+    F1 Score: 0.47
+
+TinyProxy
+    Confusion Matrix:
+    True Positive (TP): 415 | 11.74% of total | 100.00% of true value
+    False Positive (FP): 616 | 17.43% of total
+    True Negative (TN): 2503 | 70.83% of total | 80.25% of true value
+    False Negative (FN): 0 | 0.00% of total
+
+    Precision: 0.40
+    Recall: 1.00
+    F1 Score: 0.57
+
+
+
+
+
+
+
+
+
+
+

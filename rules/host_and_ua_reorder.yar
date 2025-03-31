@@ -1,11 +1,12 @@
-rule Host_First_UA_Second
+rule Host_And_Ua_Reorder
 {
     strings:
-        $host_header = /\nHost:/ nocase
-        $user_agent_header = /\nUser-Agent:/ nocase
-        $any_header = /(\n)[a-zA-Z0-9\-]+:/
+        $host_header = "Host:"
+        $user_agent_header = "User-Agent:"
+        $accept = "Accept:"
 
     condition:
-        (@any_header[1]) == @host_header and
-        (@any_header[2]) == @user_agent_header
+        @host_header < @user_agent_header and
+        @user_agent_header < @accept
+    
 }
