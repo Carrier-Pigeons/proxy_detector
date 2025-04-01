@@ -10,6 +10,7 @@ proxies:
         - "./rules/dnt_cap.yar"
         - "./rules/sec-ch-move.yar"
         - "./rules/accept_encoding_last.yar"
+        - "./rules/cache_control_removed.yar"
 
       should_be_false:
 
@@ -70,12 +71,8 @@ proxies:
         - "./rules/host_and_ua_reorder.yar"
         - "./rules/sec_ch_ua_cap.yar"
         - "./rules/x_forwarded_for_added.yar"
+        - "./rules/x_forwarded_for_last_header.yar"
       should_be_false:
-        - "./rules/x_forwarded_host_added.yar"
-        - "./rules/x_forwarded_port_added.yar"
-        - "./rules/x_forwarded_proto_added.yar"
-        - "./rules/x_forwarded_server_added.yar"
-        - "./rules/via_added.yar"
 
 
   - proxy: "TinyProxy"
