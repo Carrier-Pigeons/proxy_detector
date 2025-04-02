@@ -47,15 +47,7 @@ def scan_text(rules, names, text):
     matches = []
     fails = []
     for rule in rules:
-
         curr_match = rule.match(data=text)
-        # for match in curr_match:
-        #     print(f"Rule: {match.rule}")
-        #     for string_match in match.strings:  # Iterate over the list of matches
-        #         print(string_match)
-        #         for instance in string_match.instances:
-        #             print(f"Match: {instance.offset}")
-
         if len(curr_match) != 0:
             matches.append([str(match) for match in curr_match])
     for name in names:
@@ -111,8 +103,7 @@ def scan_sqlite_database(db_path, config_file):
                 continue
 
             print(f"\n========== Parsing Ruleset {proxies[i]} ==========\n")
-            rules_true, names_true = load_yara_rules(ruleset_paths['should_be_true'])
-            rules_false, names_false = load_yara_rules(ruleset_paths.get('should_be_false', []))
+            rules, names = load_yara_rules(ruleset_paths['rules'])
             total = 0
             total_from_proxy = 0
             total_not_from_proxy = 0
@@ -121,10 +112,9 @@ def scan_sqlite_database(db_path, config_file):
             fail_not_from_proxy = 0
             for rowid, id_text, headers_text, ip_text in rows:
                 if headers_text:
-                    matches_true, fails_true = scan_text(rules_true, names_true, headers_text)
-                    matches_false, fails_false = scan_text(rules_false, names_false, headers_text)
+                    matches, fails = scan_text(rules, names, headers_text)
                     is_from_proxy = (ip_text == ips[i])
-                    if len(matches_true) == len(names_true) and not matches_false:
+                    if len(matches) == len(names):
                         if not is_from_proxy:
                             fail += 1
                             fail_not_from_proxy += 1
@@ -188,14 +178,14 @@ def scan_sqlite_database(db_path, config_file):
             print(f"Total Requests Parsed: {overall_total}")
             print("")
             print("Confusion Matrix:")
-            print(f"True Positive (TP): {TP} | {100 * TP/total:.2f}% of total | {100 * TP/total_from_proxy:.2f}% of true value")
-            print(f"False Positive (FP): {FP} | {100 * FP/total:.2f}% of total | {100 * FP/total_from_proxy:.2f}% of true value")
-            print(f"True Negative (TN): {TN} | {100 * TN/total:.2f}% of total | {100 * TN/(total-total_from_proxy):.2f}% of true value")
-            print(f"False Negative (FN): {FN} | {100 * FN/total:.2f}% of total | {100 * FN/(total-total_from_proxy):.2f}% of true value")
+            print(f"True Positive (TP): {overall_tp} | {100 * overall_tp/overall_total:.5f}% of total")
+            print(f"False Positive (FP): {overall_fp} | {100 * overall_fp/overall_total:.5f}% of total")
+            print(f"True Negative (TN): {overall_tn} | {100 * overall_tn/overall_total:.5f}% of total")
+            print(f"False Negative (FN): {overall_fn} | {100 * overall_fn/overall_total:.5f}% of total")
             print("")
-            print(f"Precision: {precision:.2f}")
-            print(f"Recall: {recall:.2f}")
-            print(f"F1 Score: {f1_score:.2f}")
+            print(f"Precision: {precision:.5f}")
+            print(f"Recall: {recall:.5f}")
+            print(f"F1 Score: {f1_score:.5f}")
             print("")
             
         conn.close()
