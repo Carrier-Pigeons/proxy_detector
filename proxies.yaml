@@ -25,11 +25,11 @@ proxies:
         - "./rules/x_forwarded_proto_added.yar"
         - "./rules/x_forwarded_server_added.yar"
 
-  # - proxy: "MITMProxy"
-  #   ip: "147.182.196.179"
-  #   yara_ruleset:
-  #     rules:
-  #       - "./rules/catch.yar"
+  - proxy: "MITMProxy"
+    ip: "147.182.196.179"
+    yara_ruleset:
+      rules:
+        - "./rules/catch.yar"
 
   - proxy: "Squid"
     ip: "178.128.225.42"  
