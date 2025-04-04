@@ -1,0 +1,64 @@
+proxies:
+  - proxy: "Evilginx"
+    ip: "142.93.155.177"
+    yara_ruleset:
+      rules:
+        - "./rules/connection_removed.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/accept_encoding_gzip.yar"
+        - "./rules/host_first_ua_second.yar"
+        - "./rules/dnt_cap.yar"
+        - "./rules/sec-ch-move.yar"
+        - "./rules/accept_encoding_last.yar"
+        - "./rules/cache_control_removed.yar"
+
+  - proxy: "Traefik"
+    ip: "159.223.56.15"  
+    yara_ruleset:
+      rules:
+        - "./rules/connection_removed.yar"
+        - "./rules/dnt_cap.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/x_forwarded_for_added.yar"
+        - "./rules/x_forwarded_host_added.yar"
+        - "./rules/x_forwarded_port_added.yar"
+        - "./rules/x_forwarded_proto_added.yar"
+        - "./rules/x_forwarded_server_added.yar"
+
+  - proxy: "Squid"
+    ip: "178.128.225.42"  
+    yara_ruleset:
+      rules:
+        - "./rules/surrogate_capability_added.yar"
+        - "./rules/via_added.yar"
+        - "./rules/x_added.yar"
+        - "./rules/connection_close.yar"
+
+  - proxy: "HAProxy"
+    ip: "170.64.227.20"  
+    yara_ruleset:
+      rules:
+        - "./rules/all_headers_lowercase.yar"
+
+  - proxy: "Modlishka"
+    ip: "159.65.95.40"  
+    yara_ruleset:
+      rules:
+        - "./rules/connection_removed.yar"
+        - "./rules/dnt_cap.yar"
+        - "./rules/host_and_ua_reorder.yar"
+        - "./rules/sec_ch_ua_cap.yar"
+        - "./rules/x_forwarded_for_added.yar"
+        - "./rules/x_forwarded_for_last_header.yar"
+
+  - proxy: "TinyProxy"
+    ip: "209.38.52.54"
+    yara_ruleset:
+      rules:
+        - "./rules/sec_ch_removed.yar"
+        - "./rules/x_added.yar"
+        - "./rules/connection_close_required.yar"
+        - "./rules/connection_second.yar"
+        # - "./rules/x_tiny_added.yar"
+        - "./rules/sec-ch-move.yar"
+        - "./rules/zstd_encoding_removed.yar"
