@@ -32,9 +32,9 @@ Scan the database using YARA rules. With just the required flags, the program wi
    python proxy_detector.py data.db all.yaml
    ```
 
-Optional flags can be added in any order to specify a proxy to display, and to print the requests that are being triggered as true/false positive/negative. Leaving out either of these optional flags will run it against all the proxies in `proxies.yaml` or not print detailed information about the true/false positive/negative results respectively:
+Optional flags can be added in any order to print out verbose mode, specify a proxy to display, and to print the requests that are being triggered as true/false positive/negative respectively. Leaving out any of these optional flags will run it against all the proxies in `proxies.yaml` or not print detailed information about the true/false positive/negative results:
    ```bash
-   python proxy_detector.py <sqlite_db_file> <config_file> <flag=[tp][fp][tn][fn]> <proxy=[proxy_name]>
+   python proxy_detector.py <sqlite_db_file> <config_file> <-v> <flag=[tp][fp][tn][fn]> <proxy=[proxy_name]>
    ```
    Example:
    ```bash

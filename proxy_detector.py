@@ -46,14 +46,16 @@ def scan_text(rules, names, text):
     """Scans the given text using YARA rules."""
     matches = []
     fails = []
+    triggered_rules = []
     for rule in rules:
         curr_match = rule.match(data=text)
         if len(curr_match) != 0:
             matches.append([str(match) for match in curr_match])
+            triggered_rules.extend([match.rule for match in curr_match])
     for name in names:
         if name not in matches:
             fails.append(name)
-    return matches, fails 
+    return matches, fails, triggered_rules
 
 def print_list(flag, id_text, headers_text, proxy_detected):
     if list_flag == flag:
@@ -112,7 +114,7 @@ def scan_sqlite_database(db_path, config_file):
             fail_not_from_proxy = 0
             for rowid, id_text, headers_text, ip_text in rows:
                 if headers_text:
-                    matches, fails = scan_text(rules, names, headers_text)
+                    matches, fails, triggered_rules = scan_text(rules, names, headers_text)
                     is_from_proxy = (ip_text == ips[i])
                     if len(matches) == len(names):
                         if not is_from_proxy:
@@ -121,11 +123,17 @@ def scan_sqlite_database(db_path, config_file):
                             total_not_from_proxy += 1
                             if verbose:
                                 print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was not from proxy\n{headers_text}\n")
+                                print(f"Triggered Rules:")
+                                print("\n".join(triggered_rules))
+                                print("-----------------------------------------")
                             print_list("FP", id_text, headers_text, proxies[i])
                         else: 
                             total_from_proxy += 1
                             if verbose:
                                 print(f"Success on id: {id_text}: Detected as {proxies[i]}\n{headers_text}\n")
+                                print(f"Triggered Rules:")
+                                print("\n".join(triggered_rules))
+                                print("-----------------------------------------")
                             print_list("TP", id_text, headers_text, proxies[i])
                     else:
                         if is_from_proxy:
@@ -134,6 +142,10 @@ def scan_sqlite_database(db_path, config_file):
                             total_from_proxy += 1
                             if verbose:
                                 print(f"Failure on id: {id_text}: Detected as {proxies[i]} but request was from proxy\n{headers_text}\n")
+                                print(f"Triggered Rules:")
+                                print("\n".join(triggered_rules))
+                                print("-----------------------------------------")
+
                             print_list("FN", id_text, headers_text, proxies[i])
                         else:
                             total_not_from_proxy += 1
