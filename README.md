@@ -29,7 +29,7 @@ Scan the database using YARA rules. With just the required flags, the program wi
    ```
    Example:
    ```bash
-   python proxy_detector.py data.db all.yaml
+   python proxy_detector.py data.db proxies.yaml
    ```
 
 Optional flags can be added in any order to print out verbose mode, specify a proxy to display, and to print the requests that are being triggered as true/false positive/negative respectively. Leaving out any of these optional flags will run it against all the proxies in `proxies.yaml` or not print detailed information about the true/false positive/negative results:
@@ -38,7 +38,7 @@ Optional flags can be added in any order to print out verbose mode, specify a pr
    ```
    Example:
    ```bash
-   python proxy_detector.py data.db all.yaml flag=fn proxy=modlishka
+   python proxy_detector.py data.db proxies.yaml flag=fn proxy=modlishka
    ```
 
 ## Configuration
