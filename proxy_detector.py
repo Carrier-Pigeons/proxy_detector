@@ -93,6 +93,9 @@ def scan_sqlite_database(db_path, config_file):
     overall_tn = 0
     overall_fn = 0
     
+    modlishka_tp = modlishka_fp = modlishka_tn = modlishka_fn = 0
+    evilginx_tp = evilginx_fp = evilginx_tn = evilginx_fn = 0
+    
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
@@ -165,6 +168,18 @@ def scan_sqlite_database(db_path, config_file):
             overall_fp += FP
             overall_tn += TN
             overall_fn += FN
+            
+            # Track malicious proxy (Modlishka/Evilginx) metrics
+            if proxies[i].lower() == "modlishka":
+                modlishka_tp += TP
+                modlishka_fp += FP
+                modlishka_tn += TN
+                modlishka_fn += FN
+            if proxies[i].lower() == "evilginx":
+                evilginx_tp += TP
+                evilginx_fp += FP
+                evilginx_tn += TN
+                evilginx_fn += FN
                                     
             precision, recall, f1_score = calculate_metrics(TP, FP, TN, FN)
             
@@ -198,6 +213,48 @@ def scan_sqlite_database(db_path, config_file):
             print(f"Precision: {precision:.3f}")
             print(f"Recall: {recall:.3f}")
             print(f"F1 Score: {f1_score:.3f}")
+            print("")
+            
+            mal_tp = modlishka_tp + evilginx_tp
+            mal_fp = modlishka_fp + evilginx_fp
+            mal_tn = modlishka_tn + evilginx_tn
+            mal_fn = modlishka_fn + evilginx_fn
+
+            mal_total = mal_tp + mal_fp + mal_tn + mal_fn
+            if mal_total == 0: mal_total = 1  # prevent division by zero
+
+            # For % of true value:
+            mal_true_pos_val = mal_tp + mal_fn
+            mal_true_neg_val = mal_tn + mal_fp
+
+            percent_tp_total = 100 * mal_tp / mal_total if mal_total else 0
+            percent_fp_total = 100 * mal_fp / mal_total if mal_total else 0
+            percent_tn_total = 100 * mal_tn / mal_total if mal_total else 0
+            percent_fn_total = 100 * mal_fn / mal_total if mal_total else 0
+
+            percent_tp_true = 100 * mal_tp / mal_true_pos_val if mal_true_pos_val else 0
+            percent_fn_true = 100 * mal_fn / mal_true_pos_val if mal_true_pos_val else 0
+            percent_tn_true = 100 * mal_tn / mal_true_neg_val if mal_true_neg_val else 0
+            percent_fp_true = 100 * mal_fp / mal_true_neg_val if mal_true_neg_val else 0
+
+            mal_precision, mal_recall, mal_f1 = calculate_metrics(mal_tp, mal_fp, mal_tn, mal_fn)
+
+            print(f"\n========== Malicious Proxy Detection ==========")
+            print(f"Includes: Modlishka & Evilginx")
+            print("")
+            print(f"Total Requests Parsed Through Malicious Proxies: {mal_total}")
+            print(f"Total True Positives (TP): {mal_tp + mal_fn}")
+            print(f"Total True Negatives (TN): {mal_tn + mal_fp}")
+            print("")
+            print("Confusion Matrix:")
+            print(f"True Positive (TP): {mal_tp} | {percent_tp_total:.3f}% of total | {percent_tp_true:.3f}% of true value")
+            print(f"False Positive (FP): {mal_fp} | {percent_fp_total:.3f}% of total")
+            print(f"True Negative (TN): {mal_tn} | {percent_tn_total:.3f}% of total | {percent_tn_true:.3f}% of true value")
+            print(f"False Negative (FN): {mal_fn} | {percent_fn_total:.3f}% of total")
+            print("")
+            print(f"Precision: {mal_precision:.3f}")
+            print(f"Recall: {mal_recall:.3f}")
+            print(f"F1 Score: {mal_f1:.3f}")
             print("")
             
         conn.close()
