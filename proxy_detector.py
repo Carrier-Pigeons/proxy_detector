@@ -240,6 +240,7 @@ def scan_sqlite_database(db_path, config_file):
             mal_precision, mal_recall, mal_f1 = calculate_metrics(mal_tp, mal_fp, mal_tn, mal_fn)
 
             print(f"\n========== Malicious Proxy Detection ==========")
+            print("")
             print(f"Includes: Modlishka & Evilginx")
             print("")
             print(f"Total Requests Parsed Through Malicious Proxies: {mal_total}")
